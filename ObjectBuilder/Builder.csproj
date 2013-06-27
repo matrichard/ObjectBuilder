@@ -7,8 +7,8 @@
     <ProjectGuid>{3FFCD36E-F76E-427D-9801-A69FC8D0CA2D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ObjectBuilder</RootNamespace>
-    <AssemblyName>ObjectBuilder</AssemblyName>
+    <RootNamespace>Builder</RootNamespace>
+    <AssemblyName>Builder</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="ObjectBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyAccessor.cs" />
     <Compile Include="TypeAccessor.cs" />

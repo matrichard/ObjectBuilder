@@ -24,4 +24,11 @@
         public decimal DecimalProperty { get; set; }
         public int IntProperty { get; set; }
     }
+
+    public class Dto2
+    {
+        public string PropertyString { get; set; }
+        public decimal PropertyDecimal { get; set; }
+        public int IntProperty { get; set; }
+    }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using Builder;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using ObjectBuilder;
 
 namespace ObjectBuilderTests
 {
@@ -14,7 +14,7 @@ namespace ObjectBuilderTests
         public void GivenPropertyAccessorWhenCreateGetAccessorThenIsNotNull()
         {
             // ARRANGE
-            var propInfo = typeof(Entity).GetProperty((Entity x) => x.StringProperty);
+            var propInfo = typeof(Entity).GetProperty((Entity x) => x.DecimalProperty);
 
             // ACT
             var getter = PropertyAccessor.CreateGet<Entity>(propInfo);
@@ -87,25 +87,6 @@ namespace ObjectBuilderTests
 
             // ASSERT
             Assert.AreEqual(newValue, e.StringProperty);
-        }
-
-        [TestCategory("PropertyAccessor")]
-        [TestProperty("Accessor", "Set")]
-        [TestMethod]
-        public void GivenEntityAndConversionWhenCreateSetAccessorForStringPropertyThenStringDecimalIsAssigned()
-        {
-            // ARRANGE
-            var e = new Entity { StringProperty = "a string property" };
-            var propInfo = e.GetType().GetProperty((Entity x) => x.StringProperty);
-            const decimal newValue = 10.00M;
-
-            var setter = PropertyAccessor.CreateSet<Entity>(propInfo, x => x.ToInvariantString());
-
-            // ACT
-            setter(e, newValue);
-
-            // ASSERT
-            Assert.AreEqual(newValue.ToString(CultureInfo.InvariantCulture), e.StringProperty);
         }
     }
 }
