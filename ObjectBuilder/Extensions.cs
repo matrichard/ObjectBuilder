@@ -9,17 +9,22 @@ namespace Builder
     {
         public static PropertyInfo GetProperty<T, TProp>(this Type t, Expression<Func<T, TProp>> action)
         {
-            //var expr = (MemberExpression) action.Body;
-            //var propName = expr.Member.Name;
             var propName = action.PropertyName();
 
             return t.GetProperty(propName);
         }
 
-        public static string PropertyName<T, TProp>(this Expression<Func<T, TProp>> action)
+        public static string PropertyName<T, TProp>(this Expression<Func<T, TProp>> expression)
         {
-            var expr = (MemberExpression)action.Body;
-            return expr.Member.Name;
+            if (expression.Body is MemberExpression)
+            {
+                return ((MemberExpression)expression.Body).Member.Name;
+            }
+            else
+            {
+                var op = ((UnaryExpression)expression.Body).Operand;
+                return ((MemberExpression)op).Member.Name;
+            }
         }
 
         public static string ToInvariantString(this object value)

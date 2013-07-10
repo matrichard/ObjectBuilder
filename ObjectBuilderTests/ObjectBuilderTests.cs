@@ -9,7 +9,7 @@ namespace ObjectBuilderTests
     {
         [TestCategory("ObjectBuilder")]
         [TestMethod]
-        public void GivenObjectBuilderThenBuildFromDtoThenEntityNotNull()
+        public void GivenObjectBuilderWhenBuildFromDtoThenEntityNotNull()
         {
             // ARRANGE
             var dto = new Dto();
@@ -24,7 +24,7 @@ namespace ObjectBuilderTests
 
         [TestCategory("ObjectBuilder")]
         [TestMethod]
-        public void GivenObjectBuilderThenBuildFromDtoThenEntityPropertiesShouldBeEquals()
+        public void GivenObjectBuilderWhenBuildFromDtoThenEntityPropertiesShouldBeEquals()
         {
             // ARRANGE
             var dto = new Dto
@@ -43,9 +43,10 @@ namespace ObjectBuilderTests
             Assert.AreEqual(dto.DecimalProperty, e.DecimalProperty);
             Assert.AreEqual(dto.IntProperty, e.IntProperty);
         }
+
         [TestCategory("ObjectBuilder")]
         [TestMethod]
-        public void GivenObjectBuilderWhenBuildFromDtoWithPropertyNameThatDifferThenEntityPropertiesShouldBeEquals()
+        public void GivenObjectBuilderWhenBuildWithDtoWherePropertyNameDifferThenEntityPropertyShouldNotBeEqual()
         {
             // ARRANGE
             var dto = new Dto2
@@ -55,16 +56,104 @@ namespace ObjectBuilderTests
                 IntProperty = 10
             };
             var sut = new ObjectBuilder<Dto2, Entity>();
-            
+
             // ACT
-            sut.Assign(e => e.StringProperty, d => d.PropertyString);
             var entity = sut.Build(dto);
 
             // ASSERT
-            Assert.AreEqual(dto.PropertyString, entity.StringProperty);
-            Assert.AreEqual(dto.PropertyDecimal, entity.DecimalProperty);
+            Assert.AreNotEqual(dto.PropertyString, entity.StringProperty);
+        }
+    }
+
+    [TestClass]
+    public class ObjectMapperTests
+    {
+        [TestCategory("ObjectMapper")]
+        [TestMethod]
+        public void GivenObjectMapperWhenInjectFromThenReturnedObjectIsNotNull()
+        {
+            // ARRANGE
+            var dto = new Dto
+            {
+                StringProperty = "a string value",
+                DecimalProperty = 10.03M,
+                IntProperty = 10
+            };
+            var sut = new ObjectMapper<Dto, Entity>();
+
+            // ACT
+            var entity = sut.InjectFrom(dto);
+
+            // ASSERT
+            Assert.IsNotNull(entity);
+        }
+
+        [TestCategory("ObjectMapper")]
+        [TestMethod]
+        public void GivenObjectMapperWhenInjectFromThenReturnedObjectIsTypeOfEntity()
+        {
+            // ARRANGE
+            var dto = new Dto
+            {
+                StringProperty = "a string value",
+                DecimalProperty = 10.03M,
+                IntProperty = 10
+            };
+            var sut = new ObjectMapper<Dto, Entity>();
+
+            // ACT
+            var entity = sut.InjectFrom(dto);
+
+            // ASSERT
+            Assert.IsTrue(entity is Entity);
+        }
+
+        [TestCategory("ObjectMapper")]
+        [TestMethod]
+        public void GivenObjectMapperWhenInjectFromThenReturnedObjectPropertiesAreEqual()
+        {
+            // ARRANGE
+            var dto = new Dto
+            {
+                StringProperty = "a string value",
+                DecimalProperty = 10.03M,
+                IntProperty = 10
+            };
+            var sut = new ObjectMapper<Dto, Entity>();
+
+            // ACT
+            var entity = sut.InjectFrom(dto);
+
+            // ASSERT
+            Assert.AreEqual(dto.StringProperty, entity.StringProperty);
+            Assert.AreEqual(dto.DecimalProperty, entity.DecimalProperty);
             Assert.AreEqual(dto.IntProperty, entity.IntProperty);
         }
+
+        [TestCategory("ObjectMapper")]
+        [TestMethod]
+        public void GivenObjectMapperWhenInjectFromWithDifferentPropertyNamesThenReturnedObjectPropertiesAreEqual()
+        {
+            // ARRANGE
+            var dto = new Dto2
+            {
+                PropertyString = "a string value",
+                PropertyDecimal = 10.03M,
+                IntProperty = 10
+            };
+            var sut = new ObjectMapper<Dto2, Entity>();
+            sut.AssignProperty(entity => entity.StringProperty, d => d.PropertyString);
+            sut.AssignProperty(entity => entity.DecimalProperty, d => d.PropertyDecimal);
+
+            // ACT
+            var e = sut.InjectFrom(dto);
+
+            // ASSERT
+            Assert.AreEqual(dto.PropertyString, e.StringProperty);
+            Assert.AreEqual(dto.PropertyDecimal, e.DecimalProperty);
+            Assert.AreEqual(dto.IntProperty, e.IntProperty);
+        }
+
 
     }
 }
